@@ -2,15 +2,18 @@
 #include <stdlib.h>
 #include <math.h>
 
+double ComputeNewOffset(double r, double val)
+{
+    return (val + sqrt(2*pow(r, 2) - pow(val, 2))) / 2;
+}
+
 double DeltaLength(double x, double y, double c, double d, double s, double t, double r, int depth, int maxDepth)
 {
     if(depth >= maxDepth)
-        return (sqrt(pow(x - s, 2) + pow(y - d, 2)) + sqrt(pow(x - c, 2) + pow(y - t, 2)));
+       return (sqrt(pow(x - s, 2) + pow(y - d, 2)) + sqrt(pow(x - c, 2) + pow(y - t, 2)));
 
-    double temp = d - x;
-    double newY1 = (temp + sqrt(2*pow(r, 2) - pow(temp, 2))) / 2;
-    temp = c - y;
-    double newX2 = (temp + sqrt(2*pow(r, 2) - pow(temp, 2))) / 2;
+    double newY1 = ComputeNewOffset(r, d - x);
+    double newX2 = ComputeNewOffset(r, c - y);
     double newX1 = x - d + newY1;
     double newY2 = y - c + newX2;
 
@@ -36,7 +39,7 @@ int main()
             break;
         } else if(scanCount != 1) {
             fprintf(stderr, "Bad number\n\n");
-            continue;
+            exit(EXIT_FAILURE);
         }
 
         printf("Depth: ");
@@ -47,7 +50,7 @@ int main()
             break;
         } else if(scanCount != 1) {
             fprintf(stderr, "Bad number\n\n");
-            continue;
+            exit(EXIT_FAILURE);
         }
 
         double pi = ApproxPi(radius, depth);
